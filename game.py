@@ -1,5 +1,5 @@
 from bearlibterminal import terminal as blt
-import entity
+import entity as ent
 
 
 terminal_width = 80
@@ -14,13 +14,14 @@ blt.bkcolor('bg')
 blt.set("palette.fg = #F68F37")
 blt.set("palette.enemy = #231712")
 blt.set("palette.terrain = #AD4E1A")
+blt.set("palette.loot = #231712")
 
-entity.make_map(map_height, map_width)
+ent.make_map(map_height, map_width)
 
-player = entity.Entity(terminal_width//2, terminal_height//2, '@', 'fg')
-npc = entity.Entity(terminal_width//2 - 5, terminal_height//2, '@', 'enemy')
-entity_box = [player, npc]
-entity.render_all(entity_box, map_width, map_height)
+player = ent.Entity(1, 1, '@', 'fg')
+# npc = ent.Entity(terminal_width//2 - 5, terminal_height//2, '@', 'enemy')
+entity_box = [player]
+ent.render_all(entity_box, map_width, map_height)
 blt.refresh()
 
 game_state = True
@@ -42,13 +43,16 @@ def handle_keys():
     elif user_input == blt.TK_Q and \
             blt.check(blt.TK_CONTROL):
         game_state = False
+    elif user_input == blt.TK_G and \
+            blt.check(blt.TK_SHIFT):
+        ent.make_map(map_height, map_width)
 
 
 while game_state is True:
     for unit in entity_box:
-        entity.Entity.clear(unit)
+        ent.Entity.clear(unit)
     handle_keys()
-    entity.render_all(entity_box, map_width, map_height)
+    ent.render_all(entity_box, map_width, map_height)
     blt.refresh()
 
 blt.close()
